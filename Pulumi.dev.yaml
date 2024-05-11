@@ -1,0 +1,5 @@
+encryptionsalt: v1:TRTwI+txJNg=:v1:31n8FwPzF6UrRNol:ls5NuVgEgE/CjS7BHje/tN3r+EimLw==
+config:
+  profile: idp-dev
+#  aws:profile: idp-dev
+#  aws:region: us-east-1

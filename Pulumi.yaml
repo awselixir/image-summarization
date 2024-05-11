@@ -1,0 +1,13 @@
+name: image-summarization
+runtime: nodejs
+description: Document processing using Claude3
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: aws-typescript
+  primaryRegion: us-east-1
+  secondaryRegion: us-east-2
+  inboundBucketName: inbound-bucket
+  inboundNotificationName: inbound-notification
+  inboundTopicName: inbound-topic
+  suffix: backup
