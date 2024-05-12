@@ -1,6 +1,6 @@
 name: image-summarization
 runtime: nodejs
-description: Document processing using Claude3
+description: Document processing using Rekognition & Bedrock
 config:
   pulumi:tags:
     value:
