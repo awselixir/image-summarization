@@ -29,7 +29,7 @@ This deployment uses the AWS credential file. the credentials file is a plaintex
 
 Example: Create a credential profile name image-summarization-dev
 
-```console
+```shell
 $ aws configure --profile image-summarization-dev
 AWS Access Key ID [None]: <YOUR_ACCESS_KEY_ID>
 AWS Secret Access Key [None]: <YOUR_SECRET_ACCESS_KEY>
