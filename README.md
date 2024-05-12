@@ -57,7 +57,7 @@ Similar to Terraform, Pulumi needs a configured backend to track state.
 
 If you're deploying this as a simple test, the easiest option is to keep the state on your local machine.
 
-```bash
+```shell
 pulumi login --local
 ```
 
@@ -66,7 +66,7 @@ pulumi login --local
 Or you can easily create an S3 bucket and store the state there. Pulumi can also use the same bucket for multiple project & stacks so there's no worries in using a pre-existing Pulumi state bucket. Just substitute your bucket name and AWS profile contained in ~/.aws/credentials.
 
 
-```bash
+```shell
 pulumi login 's3://<bucket-name>?region=us-east-1&awssdk=v2&profile=<profile-name>'
 ```
 
