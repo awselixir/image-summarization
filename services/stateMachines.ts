@@ -113,7 +113,7 @@ export const stateMachineHandler = (
           Type: "Task",
           End: true,
           Parameters: {
-            "Body.$": "$.summary",
+            "Body.$": "$",
             Bucket: outputBucket.id.apply(id => id),
             "Key.$": "States.Format('{}.json', $.source.file)",
           },

@@ -21,9 +21,13 @@ AWS Step Functions is a visual workflow service that helps developers use AWS se
 ## Installation
 
 ### Prerequisites
-- Pulumi
-- Node
-- AWS CLI
+- [Pulumi](https://www.pulumi.com/docs/install)
+- [Node.js](https://nodejs.org/en/download)
+- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+
+## Dependencies
+
+From the project directory install the dependencies using `npm install`
 
 ### Authentication
 This guide assumes you'll be using an AWS credential file, but there's a few options when it comes to [authenticating Pulumi with AWS](https://www.pulumi.com/registry/packages/aws/installation-configuration/). 
@@ -140,4 +144,116 @@ Set the desired region using `pulumi config set aws:region region`
 
 ```shell
 pulumi config set aws:region us-east-1
+```
+
+## Installation
+
+Assuming everything went right, you can now deploy the stack using `pulumi up`
+
+```shell
+% pulumi up   
+Previewing update (dev):
+     Type                           Name                      Plan       
+ +   pulumi:pulumi:Stack            image-summarization-dev   create     
+ +   ├─ aws:s3:Bucket               output-bucket             create     
+ +   ├─ aws:s3:Bucket               input-bucket              create     
+ +   ├─ aws:lambda:Function         filter-labels             create     
+ +   ├─ aws:iam:Role                lambda-role               create     
+ +   ├─ aws:s3:BucketNotification   inbound-notification      create     
+ +   ├─ aws:cloudwatch:EventRule    inbound-rule              create     
+ +   ├─ aws:lambda:Function         build-output              create     
+ +   ├─ aws:iam:Role                inbound-rule-role         create     
+ +   ├─ aws:iam:Role                state-machine-role        create     
+ +   ├─ aws:sfn:StateMachine        state-machine             create     
+ +   ├─ aws:iam:Policy              inbound-rule-role-policy  create     
+ +   └─ aws:cloudwatch:EventTarget  rule-target               create     
+
+Resources:
+    + 13 to create
+
+Do you want to perform this update?  [Use arrows to move, type to filter]
+> yes
+  no
+  details
+```
+
+```shell
+Do you want to perform this update? yes
+Updating (dev):
+     Type                           Name                      Status              
+ +   pulumi:pulumi:Stack            image-summarization-dev   created (33s)       
+ +   ├─ aws:iam:Role                lambda-role               created (1s)        
+ +   ├─ aws:s3:Bucket               input-bucket              created (1s)        
+ +   ├─ aws:s3:Bucket               output-bucket             created (1s)        
+ +   ├─ aws:s3:BucketNotification   inbound-notification      created (1s)        
+ +   ├─ aws:cloudwatch:EventRule    inbound-rule              created (2s)        
+ +   ├─ aws:lambda:Function         build-output              created (11s)       
+ +   ├─ aws:lambda:Function         filter-labels             created (17s)       
+ +   ├─ aws:iam:Role                state-machine-role        created (1s)        
+ +   ├─ aws:sfn:StateMachine        state-machine             created (1s)        
+ +   ├─ aws:iam:Policy              inbound-rule-role-policy  created (0.74s)     
+ +   ├─ aws:iam:Role                inbound-rule-role         created (0.88s)     
+ +   └─ aws:cloudwatch:EventTarget  rule-target               created (0.77s)     
+
+Resources:
+    + 13 created
+
+Duration: 34s
+```
+
+Tip: To prevent being prompted for your password on every deployment, set the environment variable ***PULUMI_CONFIG_PASSPHRASE*** to the password entered during stack creation
+
+```shell
+export PULUMI_CONFIG_PASSPHRASE=password
+```
+
+## Test
+
+There are a couple of copyright free images contained in the assets folder (skateboard.jpeg & horses.jpeg). Upload either to the input bucket and you should quickly find the generated sumamry in the output bucket.
+
+### Example
+
+For this example, we will upload skateboard.jpeg to the input bucket.
+
+#### Image
+
+![Skateboard](/assets/skateboard.jpeg "Skateboard")
+
+#### Output
+
+The output is a JSON file, and the object key will be ***orginal-filename.json***
+
+```json
+{
+  "source": { "bucket": "input-bucket-a92f86d", "file": "skateboard.jpeg" },
+  "labels": [
+    {
+      "Aliases": [],
+      "Categories": [{ "Name": "Buildings and Architecture" }],
+      "Confidence": 99.999985,
+      "Instances": [],
+      "Name": "Neighborhood",
+      "Parents": []
+    },
+    {
+      "Aliases": [{ "Name": "Town" }],
+      "Categories": [{ "Name": "Buildings and Architecture" }],
+      "Confidence": 99.98229,
+      "Instances": [],
+      "Name": "City",
+      "Parents": []
+    },
+    {
+      "Aliases": [],
+      "Categories": [{ "Name": "Transport and Logistics" }],
+      "Confidence": 99.971695,
+      "Instances": [],
+      "Name": "Road",
+      "Parents": []
+    }
+    //Content truncated for readability
+  ],
+  "summary": "The image shows a city with a road and street in the neighborhood. There are 13 cars and 21 wheels. There is 1 building and 2 persons in the metropolis. The architecture is urban."
+}
+
 ```
