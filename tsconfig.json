@@ -12,5 +12,5 @@
     "noImplicitReturns": true,
     "forceConsistentCasingInFileNames": true
   },
-  "files": ["index.ts", "./services/createBucketNotification.ts"]
+  "files": ["index.ts"]
 }

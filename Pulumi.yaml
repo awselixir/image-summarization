@@ -5,9 +5,15 @@ config:
   pulumi:tags:
     value:
       pulumi:template: aws-typescript
-  primaryRegion: us-east-1
-  secondaryRegion: us-east-2
-  inboundBucketName: inbound-bucket
+  buildOutputFunctionName: build-output
+  filterLabelsFunctionName: filter-labels
+  inputBucketName: input-bucket
+  outputBucketName: output-bucket
   inboundNotificationName: inbound-notification
-  inboundTopicName: inbound-topic
-  suffix: backup
+  inboundRuleName: inbound-rule
+  inboundRuleRoleName: inbound-rule-role
+  lambdaRoleName: lambda-role
+  stateMachineName: state-machine
+  stateMachineRoleName: state-machine-role
+  targetName: rule-target
+  modelId: arn:aws:bedrock:us-east-1::foundation-model/amazon.titan-text-premier-v1:0

@@ -2,3 +2,4 @@
 /node_modules/
 Pulumi.*.yaml
 .tool-versions
+.DS_Store

@@ -1,14 +1,17 @@
 {
-    "name": "idp",
+    "name": "image-summarization",
     "main": "index.ts",
     "devDependencies": {
         "@types/node": "^18"
     },
     "dependencies": {
+        "@pulumi/archive": "^0.0.5",
         "@pulumi/aws": "^6.0.0",
         "@pulumi/awsx": "^2.0.2",
         "@pulumi/pulumi": "^3.113.0",
+        "@types/aws-lambda": "^8.10.137",
         "dotenv": "^16.4.5",
+        "esbuild": "^0.21.2",
         "typescript": "^5.0.0"
     }
 }

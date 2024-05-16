@@ -1,40 +1,42 @@
-import { primaryProvider, secondaryProvider } from "./services/providers";
 import * as pulumi from "@pulumi/pulumi";
 import * as buckets from "./services/buckets";
-import * as topics from "./services/topics";
 import * as notifications from "./services/notifications";
+import * as roles from "./services/roles";
+import * as stateMachines from "./services/stateMachines";
+import * as functions from "./services/functions"
 
 let config = new pulumi.Config();
-let stack = pulumi.getStack();
 
-const inboundBucketName = config.require("inboundBucketName");
-const inboundNotificationName = config.require("inboundNotificationName");
-const inboundTopicName = config.require("inboundTopicName");
-const suffix = config.require("suffix");
+const stateMachineRoleName = config.require("stateMachineRoleName");
 
-// Create the inbound bucket
-const inboundBucket = buckets.createBucket(inboundBucketName);
+// Creates the input bucket
+const inputBucket = buckets.inputBucketHandler();
 
-// Creates the inbound topic
-const inboundTopic = topics.createBucketTopic(
-  inboundTopicName,
-  inboundBucket,
-  primaryProvider
-);
+// Enables EventBridge on the input bucket
+const inboundNotification =
+  notifications.bucketNotificationHandler(inputBucket);
 
-const inboundNotification = notifications.createBucketNotification(inboundNotificationName, inboundBucket, inboundTopic, primaryProvider)
+// Creates the output bucket
+const outputBucket = buckets.outputBucketHandler();
 
-if (stack === "prod") {
-  // Creates the backup inbound bucket
-  const inboundBucketBackup = buckets.createBucket(
-    `${inboundBucketName}-${suffix}`,
-    secondaryProvider
-  );
+const lambdaRole = roles.lambdaRoleHandler()
 
-  // Creates the backup inbound topic
-  const inboundTopicBackup = topics.createBucketTopic(
-    `${inboundTopicName}-${suffix}`,
-    inboundBucketBackup,
-    secondaryProvider
-  );
-}
+const filterLabelsFunction = functions.filterLabelsFunctionHandler(lambdaRole)
+const buildOutputFunction = functions.buildOutputFunctionHandler(lambdaRole)
+
+const stateMachineRole = roles.stateMachineRoleHandler(inputBucket, outputBucket, filterLabelsFunction, buildOutputFunction);
+
+const stateMachine = stateMachines.stateMachineHandler(stateMachineRole, filterLabelsFunction, buildOutputFunction, outputBucket);
+
+// EventBridge rule for created objects on the input bucket
+const inboundRule = notifications.ruleHandler(inputBucket);
+
+
+// Role and policy for the EventBridge rule
+const inboundRuleRolePolicy = roles.inboundRuleRolePolicyHandler(stateMachine)
+const inboundRuleRole = roles.inboundRuleRoleHandler(inboundRuleRolePolicy)
+
+// Sets the notification target to the state machine
+const ruleTarget = notifications.targetHandler(inboundRule, inboundRuleRole, stateMachine);
+
+
