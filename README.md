@@ -213,7 +213,7 @@ There are a couple of copyright free images contained in the assets folder (skat
 
 ### Example
 
-For this example, we will upload skateboard.jpeg to the input bucket.
+For this example, we will upload skateboard.jpeg to the input bucket, and we'll use the Titan Text Premier v1 model.
 
 #### Image
 
@@ -221,7 +221,7 @@ For this example, we will upload skateboard.jpeg to the input bucket.
 
 #### Output
 
-The output is a JSON file, and the object key will be ***orginal-filename.json***
+The output is a JSON file, and the object key will be ***originalFilename.json***
 
 ```json
 {
@@ -251,7 +251,7 @@ The output is a JSON file, and the object key will be ***orginal-filename.json**
       "Name": "Road",
       "Parents": []
     }
-    //Content truncated for readability
+    ...
   ],
   "summary": "The image shows a city with a road and street in the neighborhood. There are 13 cars and 21 wheels. There is 1 building and 2 persons in the metropolis. The architecture is urban."
 }

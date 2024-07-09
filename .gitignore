@@ -3,3 +3,5 @@
 Pulumi.*.yaml
 .tool-versions
 .DS_Store
+.env
+/lambdas/dist/
